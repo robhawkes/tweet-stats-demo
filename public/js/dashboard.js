@@ -40,7 +40,7 @@ _.each(technologies, function(tech) {
     type: "time.area",
     data: [{label: tech, values: [{time: Date.now() / 1000, y: 0}]}],
     axes: ["left", "right", "bottom"],
-    ticks: {time: 60, right: 3, left: 3},
+    ticks: {right: 3, left: 3},
     windowSize: 60,
     height: graphElement.clientHeight
   });
