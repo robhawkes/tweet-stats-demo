@@ -1,0 +1,15 @@
+body {
+  color: #ccc;
+  font-family: Helvetica Neue, Verdana, Arial, sans-serif;
+}
+
+h2 {
+  font-size: smaller;
+  margin: 5px 0 0 60px;
+  position: absolute;
+  text-transform: uppercase;
+}
+
+.epoch {
+  height: 120px;
+}

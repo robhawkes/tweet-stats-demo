@@ -1,0 +1,23 @@
+{
+  "name": "twitter-tech-dashboard",
+  "version": "0.0.0",
+  "authors": [
+    "Robin Hawkes <rob@rawkes.com>"
+  ],
+  "description": "Realtime statistics on various technologies",
+  "main": "public/index.html",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "epoch": "~0.6.0",
+    "d3": "~3.4.13",
+    "jquery": "~2.1.1",
+    "underscore": "~1.7.0"
+  }
+}
