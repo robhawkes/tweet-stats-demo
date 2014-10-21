@@ -12,8 +12,10 @@ var pusher = new Pusher("52db15e1600a742af0c9", {
 var technologies = ["html5", "javascript", "css", "webgl", "websockets", "nodejs", "node.js"];
 
 var graphContainer = document.querySelector(".graph-container");
+var graphElements = {};
 var graphs = {};
 
+// Create graph DOM
 _.each(technologies, function(tech) {
   // Generate graph header
   var graphHeaderElement = document.createElement("h2");
@@ -26,15 +28,23 @@ _.each(technologies, function(tech) {
   graphElement.classList.add("epoch");
   graphElement.dataset.tech = tech;
 
-  graphContainer.appendChild(graphElement);
+  graphElements[tech] = graphElement;
 
-  // Create graph
+  graphContainer.appendChild(graphElement);
+});
+
+// Create graphs
+_.each(technologies, function(tech) {
+  var graphElement = graphElements[tech];
   graphs[tech] = $(graphElement).epoch({
     type: "time.area",
     data: [{label: tech, values: [{time: Date.now() / 1000, y: 0}]}],
-    axes: ["left", "right", "bottom"]
+    axes: ["left", "right", "bottom"],
+    ticks: {time: 60, right: 3, left: 3},
+    windowSize: 60,
+    height: graphElement.clientHeight
   });
-});
+})
 
 var statsChannel = pusher.subscribe("stats");
 

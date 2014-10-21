@@ -1,15 +1,56 @@
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
 body {
-  color: #ccc;
+  background: url("background.jpg") no-repeat top center;
+  background-size: cover;
+  color: #fff;
   font-family: Helvetica Neue, Verdana, Arial, sans-serif;
+  padding: 0;
+  margin: 0;
 }
 
 h2 {
-  font-size: smaller;
-  margin: 5px 0 0 60px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 20px;
+  font-weight: 400;
+  margin: 10px 0 0 70px;
   position: absolute;
   text-transform: uppercase;
+  z-index: 10;
+}
+
+.graph-container {
+  align-content: stretch;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
 }
 
 .epoch {
+  flex-grow: 1;
   height: 120px;
+  margin: 10px 0;
+  z-index: 0;
+}
+
+.epoch-theme-dark .epoch .axis path, .epoch-theme-dark .epoch .axis line {
+  stroke: rgba(255, 255, 255, 0.5);
+  stroke-width: 2px;
+}
+
+.epoch-theme-dark .epoch .axis line {
+
+}
+
+.epoch-theme-dark .epoch .axis .tick text {
+  fill: rgba(255, 255, 255, 0.5);
+}
+
+.epoch-theme-dark .epoch .area {
+  fill: rgba(255, 255, 255, 0.3) !important;
 }
