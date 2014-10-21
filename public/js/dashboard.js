@@ -4,10 +4,7 @@ Pusher.log = function(message) {
   }
 };
 
-var pusher = new Pusher("52db15e1600a742af0c9", {
-  wsHost: "ws-megabus.pusher.com",
-  httpHost: "sockjs-megabus.pusher.com"
-});
+var pusher = new Pusher("PUSHER_APP_KEY");
 
 var technologies = ["html5", "javascript", "css", "webgl", "websockets", "nodejs", "node.js"];
 
