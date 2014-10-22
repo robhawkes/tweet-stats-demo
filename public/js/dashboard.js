@@ -32,14 +32,29 @@ _.each(technologies, function(tech) {
 
 // Create graphs
 _.each(technologies, function(tech) {
-  var graphElement = graphElements[tech];
-  graphs[tech] = $(graphElement).epoch({
-    type: "time.area",
-    data: [{label: tech, values: [{time: Date.now() / 1000, y: 0}]}],
-    axes: ["left", "right", "bottom"],
-    ticks: {right: 3, left: 3},
-    windowSize: 60,
-    height: graphElement.clientHeight
+  // Get historic data
+  $.getJSON("http://techdash.herokuapp.com/stats/" + tech + "/24hours.json", function(json) {
+    var graphData = {
+      label: tech,
+      values: []
+    };
+
+    _.each(json.data, function(data) {
+      graphData.values.push({
+        time: data.time / 1000,
+        y: data.value
+      });
+    });
+
+    var graphElement = graphElements[tech];
+    graphs[tech] = $(graphElement).epoch({
+      type: "time.area",
+      data: [graphData],
+      axes: ["left", "right", "bottom"],
+      ticks: {right: 3, left: 3},
+      windowSize: 60,
+      height: graphElement.clientHeight
+    });
   });
 })
 
