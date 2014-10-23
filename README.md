@@ -1,4 +1,4 @@
-# Tweet Stats
+# Tweet Stats Demo
 
 Realtime statistics on Twitter keywords
 
