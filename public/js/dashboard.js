@@ -6,7 +6,7 @@ Pusher.log = function(message) {
 
 var pusher = new Pusher("PUSHER_APP_KEY");
 
-var technologies = ["html5", "javascript", "css", "webgl", "websockets", "nodejs", "node.js"];
+var technologies = ["html5", "javascript", "css", "webgl", "websockets", "nodejs", "hello"];
 
 var graphContainer = document.querySelector(".graph-container");
 var graphElements = {};
@@ -31,13 +31,16 @@ _.each(technologies, function(tech) {
 });
 
 // Create graphs
+var yesterday = new Date();
+yesterday.setHours(-23);
 _.each(technologies, function(tech) {
+  var graphData = {
+    label: tech,
+    values: [ { time: yesterday.getTime() / 1000, y: 0 } ]
+  };
+
   // Get historic data
   $.getJSON("http://techdash.herokuapp.com/stats/" + tech + "/24hours.json", function(json) {
-    var graphData = {
-      label: tech,
-      values: []
-    };
 
     _.each(json.data, function(data) {
       graphData.values.push({
@@ -46,24 +49,31 @@ _.each(technologies, function(tech) {
       });
     });
 
-    var graphElement = graphElements[tech];
-    graphs[tech] = $(graphElement).epoch({
-      type: "time.area",
-      data: [graphData],
-      axes: ["left", "right", "bottom"],
-      ticks: {right: 3, left: 3},
-      windowSize: 60,
-      height: graphElement.clientHeight
-    });
+    createGraph(tech, graphData);
+
+  }).fail(function() {
+    createGraph(tech, graphData);
   });
-})
+});
 
-var statsChannel = pusher.subscribe("stats");
+var createGraph = function(tech, graphData) {
+  var graphElement = graphElements[tech];
+  graphs[tech] = $(graphElement).epoch({
+    type: "time.area",
+    data: [graphData],
+    axes: ["left", "right", "bottom"],
+    ticks: {right: 3, left: 3},
+    windowSize: 60,
+    height: graphElement.clientHeight
+  });
+};
 
-statsChannel.bind("update", function(data) {
-  _.each(data, function(stat, tech) {
-    var graph;
-    if (graph = graphs[tech]) {
+var subscribe = function(tech) {
+  var statsChannel = pusher.subscribe(tech);
+
+  statsChannel.bind("update", function(stat) {
+    var graph = graphs[tech];
+    if (graph) {
       var values = [{
         time: stat.time / 1000,
         y: stat.value
@@ -72,4 +82,8 @@ statsChannel.bind("update", function(data) {
       graph.push(values);
     }
   });
+};
+
+_.each(technologies, function(tech) {
+  subscribe(tech);
 });
