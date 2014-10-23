@@ -45,12 +45,19 @@ $.getJSON(apiURL + "/keywords.json", function(keywords) {
         values: []
       };
 
-      _.each(json.data, function(data) {
-        graphData.values.push({
-          time: data.time / 1000,
-          y: data.value
+      if (json.data.length > 0) {
+        _.each(json.data, function(data) {
+          graphData.values.push({
+            time: data.time / 1000,
+            y: data.value
+          });
         });
-      });
+      } else {
+        graphData.values.push({
+          time: Date.now() / 1000,
+          y: 0
+        });
+      }
 
       var graphElement = graphElements[keyword];
       graphs[keyword] = $(graphElement).epoch({
