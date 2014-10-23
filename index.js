@@ -35,14 +35,9 @@ app.use(errorHandler({
 app.use(express.static(root));
 app.use("/bower_components",  express.static(__dirname + "/bower_components"));
 
-// Ping
-app.get("/ping", function(req, res) {
-  res.status(200).end();
-});
-
 // Open server on specified port
 if (!silent) console.log("Starting Express server");
-app.listen(process.env.PORT || 5001);
+app.listen(process.env.PORT || 5002);
 
 
 // Capture uncaught errors

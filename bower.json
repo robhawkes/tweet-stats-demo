@@ -1,10 +1,10 @@
 {
-  "name": "twitter-tech-dashboard",
-  "version": "0.0.0",
+  "name": "tweet-stats-demo",
+  "version": "0.0.1",
   "authors": [
     "Robin Hawkes <rob@rawkes.com>"
   ],
-  "description": "Realtime statistics on various technologies",
+  "description": "Realtime statistics on Twitter keywords",
   "main": "public/index.html",
   "license": "MIT",
   "ignore": [

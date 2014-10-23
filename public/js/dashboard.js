@@ -5,71 +5,78 @@ Pusher.log = function(message) {
 };
 
 var pusher = new Pusher("PUSHER_APP_KEY");
+var apiURL = "http://tweet-stats-api.herokuapp.com";
 
-var technologies = ["html5", "javascript", "css", "webgl", "websockets", "nodejs", "node.js"];
+// TODO: Pull active keywords from the API
+$.getJSON(apiURL + "/keywords.json", function(keywords) {
+  if (!keywords || keywords.length === 0) {
+    console.log("No keywords");
+    return;
+  }
 
-var graphContainer = document.querySelector(".graph-container");
-var graphElements = {};
-var graphs = {};
+  var graphContainer = document.querySelector(".graph-container");
+  var graphElements = {};
+  var graphs = {};
 
-// Create graph DOM
-_.each(technologies, function(tech) {
-  // Generate graph header
-  var graphHeaderElement = document.createElement("h2");
-  graphHeaderElement.innerText = tech;
+  // Create graph DOM
+  _.each(keywords, function(keyword) {
+    // Generate graph header
+    var graphHeaderElement = document.createElement("h2");
+    graphHeaderElement.innerHTML = keyword;
 
-  graphContainer.appendChild(graphHeaderElement);
+    graphContainer.appendChild(graphHeaderElement);
 
-  // Generate graph element
-  var graphElement = document.createElement("div");
-  graphElement.classList.add("epoch");
-  graphElement.dataset.tech = tech;
+    // Generate graph element
+    var graphElement = document.createElement("div");
+    graphElement.classList.add("epoch");
+    graphElement.dataset.keyword = keyword;
 
-  graphElements[tech] = graphElement;
+    graphElements[keyword] = graphElement;
 
-  graphContainer.appendChild(graphElement);
-});
+    graphContainer.appendChild(graphElement);
+  });
 
-// Create graphs
-_.each(technologies, function(tech) {
-  // Get historic data
-  $.getJSON("http://techdash.herokuapp.com/stats/" + tech + "/24hours.json", function(json) {
-    var graphData = {
-      label: tech,
-      values: []
-    };
+  // Create graphs
+  _.each(keywords, function(keyword) {
+    // Get historic data
+    $.getJSON(apiURL + "/stats/" + keyword + "/24hours.json", function(json) {
+      var graphData = {
+        label: keyword,
+        values: []
+      };
 
-    _.each(json.data, function(data) {
-      graphData.values.push({
-        time: data.time / 1000,
-        y: data.value
+      _.each(json.data, function(data) {
+        graphData.values.push({
+          time: data.time / 1000,
+          y: data.value
+        });
+      });
+
+      var graphElement = graphElements[keyword];
+      graphs[keyword] = $(graphElement).epoch({
+        type: "time.area",
+        data: [graphData],
+        axes: ["left", "right", "bottom"],
+        ticks: {right: 3, left: 3},
+        windowSize: 60,
+        height: graphElement.clientHeight
       });
     });
+  })
 
-    var graphElement = graphElements[tech];
-    graphs[tech] = $(graphElement).epoch({
-      type: "time.area",
-      data: [graphData],
-      axes: ["left", "right", "bottom"],
-      ticks: {right: 3, left: 3},
-      windowSize: 60,
-      height: graphElement.clientHeight
+  var statsChannel = pusher.subscribe("stats");
+
+  statsChannel.bind("update", function(data) {
+    _.each(data, function(stat, keyword) {
+      var graph;
+      if (graph = graphs[keyword]) {
+        var values = [{
+          time: stat.time / 1000,
+          y: stat.value
+        }];
+
+        graph.push(values);
+      }
     });
-  });
-})
-
-var statsChannel = pusher.subscribe("stats");
-
-statsChannel.bind("update", function(data) {
-  _.each(data, function(stat, tech) {
-    var graph;
-    if (graph = graphs[tech]) {
-      var values = [{
-        time: stat.time / 1000,
-        y: stat.value
-      }];
-
-      graph.push(values);
-    }
   });
 });
