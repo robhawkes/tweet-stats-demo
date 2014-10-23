@@ -42,7 +42,10 @@ app.get("/ping", function(req, res) {
 
 // Open server on specified port
 if (!silent) console.log("Starting Express server");
-app.listen(process.env.PORT || 5001);
+var port = process.env.PORT || 5001;
+app.listen(port, function() {
+  console.log('listening on port %d', port);
+});
 
 
 // Capture uncaught errors
