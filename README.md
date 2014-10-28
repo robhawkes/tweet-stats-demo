@@ -15,4 +15,4 @@ Demo: [http://tweet-stats.herokuapp.com](http://tweet-stats.herokuapp.com/)
 4. [Change the Pusher application key](https://github.com/robhawkes/tweet-stats-demo/blob/master/public/js/dashboard.js#L7) in `/public/js/dashboard.js`
 5. [Change the API endpoint](https://github.com/robhawkes/tweet-stats-demo/blob/master/public/js/dashboard.js#L8) in `/public/js/dashboard.js`
 6. Test the demo locally by running `node index.js` and [checking the graphs](http://localhost:5002)
-7. Upload the API somewhere public
+7. Upload the demo somewhere public
